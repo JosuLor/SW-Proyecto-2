@@ -1,3 +1,4 @@
+/*
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -39,3 +40,31 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+*/
+
+
+import fs from 'fs';
+import fetch from 'node-fetch'
+
+const writepath = 'json/leagues/'
+
+fs.mkdirSync(writepath, { recursive: true })
+
+try {
+  // read leagues file into an array of lines
+  const data = fs.readFileSync('./json/leagues/leagues.txt', 'utf8').split("\n")
+  data.forEach((elem, idx) => {
+    const url = `https://playfootball.games/media/competitions/${elem}.png`
+    fetch(url).then(res => {
+        // check status
+        if (res.status === 200) {
+          res.body.pipe(fs.createWriteStream(`${writepath}${elem}.png`))
+        } else {
+          console.log(`status: ${res.status} line: ${idx} elem:${elem} not found`)
+        }
+      })
+      .catch(err => console.log(err))
+  })
+} catch (err) {
+  console.error(err);
+}
