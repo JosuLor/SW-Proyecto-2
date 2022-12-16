@@ -48,6 +48,7 @@ import fetch from 'node-fetch'
 
 const writepath = 'json/leagues/'
 const writepath2 = 'json/teams/'
+const writepath3 = 'json/players/'
 
 fs.mkdirSync(writepath, { recursive: true })
 
@@ -75,15 +76,47 @@ try {
 try{
   const data = fs.readFileSync('teamIDs.txt', 'utf8').split("\n")
   data.forEach((elem, idx) => {
-    const url = `https://cdn.sportmonks.com/images/soccer/teams/ ${elem.teamId%32}/${elem.teamId}.png`
+    console.log(`https://cdn.sportmonks.com/images/soccer/teams/${elem%32}/${elem}.png`)
+    const url = `https://cdn.sportmonks.com/images/soccer/teams/${elem%32}/${elem}.png`
     fetch(url).then(res => {
         // check status
+
         if (res.status === 200) {
           elem = elem.replace(/(\r\n|\n|\r)/gm, "")
+          
           res.body.pipe(fs.createWriteStream(`${writepath2}${elem}.png`, {flags:'a'}))
         } else {
           console.log(`status: ${res.status} line: ${idx} elem:${elem} not found`)
         }})})
+}catch(err){
+  console.error(err)
+}
+let i = 0
+//Ejercicio 1.5 no funciona
+try{
+  fetch('Users/Roberto/OneDrive%20-%20UPV%20EHU/Documents/GitHub/SW/SW-Proyecto-2/frontend/json/fullplayers.json').then(res=>res.json()).then(res => {
+    console.log(res)})
+//   const data = fs.readFileSync('../frontend/json/fullplayers.json', 'utf8')
+//   console.log(data.length)
+//   console.log(data[5])
+//   data.forEach((elem, idx) => {
+//     console.log(elem)
+//     elem = JSON.parse(elem).id
+//     console.log(`https://media.api-sports.io/football/players/${elem}.png`)
+//     const url = `https://media.api-sports.io/football/players/${elem}.png`
+//     fetch(url).then(res => {
+//         // check status
+//         i++
+//         if (i==100){
+//           i=0
+//           sleep(100)
+//         }
+//         if (res.status === 200) {
+//           elem = elem.replace(/(\r\n|\n|\r)/gm, "")
+//           res.body.pipe(fs.createWriteStream(`${writepath3}${elem}.png`, {flags:'a'}))
+//         } else {
+//           console.log(`status: ${res.status} line: ${idx} elem:${elem} not found`)
+//         }})})
 }catch(err){
   console.error(err)
 }
