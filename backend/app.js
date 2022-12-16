@@ -52,13 +52,14 @@ fs.mkdirSync(writepath, { recursive: true })
 
 try {
   // read leagues file into an array of lines
-  const data = fs.readFileSync('./json/leagues/leagues.txt', 'utf8').split("\n")
+  const data = fs.readFileSync('leagues.txt', 'utf8').split("\n")
   data.forEach((elem, idx) => {
     const url = `https://playfootball.games/media/competitions/${elem}.png`
     fetch(url).then(res => {
         // check status
         if (res.status === 200) {
-          res.body.pipe(fs.createWriteStream(`${writepath}${elem}.png`))
+          elem = elem.replace(/(\r\n|\n|\r)/gm, "")
+          res.body.pipe(fs.createWriteStream(`${writepath}${elem}.png`, {flags:'a'}))
         } else {
           console.log(`status: ${res.status} line: ${idx} elem:${elem} not found`)
         }
