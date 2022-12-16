@@ -47,6 +47,7 @@ import fs from 'fs';
 import fetch from 'node-fetch'
 
 const writepath = 'json/leagues/'
+const writepath2 = 'json/teams/'
 
 fs.mkdirSync(writepath, { recursive: true })
 
@@ -68,4 +69,21 @@ try {
   })
 } catch (err) {
   console.error(err);
+}
+
+//Ejercicio 1.4
+try{
+  const data = fs.readFileSync('teamIDs.txt', 'utf8').split("\n")
+  data.forEach((elem, idx) => {
+    const url = `https://cdn.sportmonks.com/images/soccer/teams/ ${elem.teamId%32}/${elem.teamId}.png`
+    fetch(url).then(res => {
+        // check status
+        if (res.status === 200) {
+          elem = elem.replace(/(\r\n|\n|\r)/gm, "")
+          res.body.pipe(fs.createWriteStream(`${writepath2}${elem}.png`, {flags:'a'}))
+        } else {
+          console.log(`status: ${res.status} line: ${idx} elem:${elem} not found`)
+        }})})
+}catch(err){
+  console.error(err)
 }
