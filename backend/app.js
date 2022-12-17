@@ -52,7 +52,11 @@ const writepath3 = 'json/players/'
 const writepath4 = 'json/flags/'
 
 fs.mkdirSync(writepath, { recursive: true })
+fs.mkdirSync(writepath2, { recursive: true })
+fs.mkdirSync(writepath3, { recursive: true })
+fs.mkdirSync(writepath4, { recursive: true })
 
+/*
 try {
   // read leagues file into an array of lines
   const data = fs.readFileSync('leagues.txt', 'utf8').split("\n")
@@ -72,7 +76,7 @@ try {
 } catch (err) {
   console.error(err);
 }
-/*
+
 // Ejercicio 1.2
 try{
   // get the flags of all countries in nationalities.txt
@@ -92,8 +96,8 @@ try{
         }})})
 }catch(err){
   console.error(err)
-}*/
-/*
+}
+
 //Ejercicio 1.4-5
 try{
   const data = fs.readFileSync('teamIDs.txt', 'utf8').split("\n")
@@ -113,8 +117,63 @@ try{
 }catch(err){
   console.error(err)
 }
-let i = 0
 */
+
+function obtain(name, writepathX, url2){
+  try{
+    const data = fs.readFileSync(name+'.txt', 'utf8').split("\n")
+    data.forEach((elem, idx) => {
+      let url 
+      let format
+      if(name == 'teamIDs'){
+        url = `${url2}/${elem%32}/${elem}.png`
+        format = '.png'
+      }
+      if(name == 'nationalities'){
+        url = `${url2}/${elem}.svg`
+        format = '.svg'
+      }
+      if(name == 'leagues'){
+        url = `${url2}/${elem}.png`
+        format = '.png'
+      }
+
+      fetch(url).then(res => {
+          // check status
+  
+          if (res.status === 200) {
+            elem = elem.replace(/(\r\n|\n|\r)/gm, "")
+            res.body.pipe(fs.createWriteStream(`${writepathX}${elem}${format}`, {flags:'a'}))
+          } else {
+            console.log(`status: ${res.status} line: ${idx} elem:${elem} not found`)
+          }})})
+  }catch(err){
+    console.error(err)
+  }
+}
+
+try {
+  // read leagues file into an array of lines
+  obtain('leagues', writepath, 'https://playfootball.games/media/competitions')
+} catch (err) {
+  console.error(err);
+}
+
+// Ejercicio 1.2
+try{
+  // get the flags of all countries in nationalities.txt
+  obtain('nationalities', writepath4, 'https://playfootball.games/who-are-ya/media/nations')
+}catch(err){
+  console.error(err)
+}
+
+//Ejercicio 1.4-5
+try{
+  obtain('teamIDs', writepath2, 'https://cdn.sportmonks.com/images/soccer/teams')
+}catch(err){
+  console.error(err)
+}
+
 //Ejercicio 1.6 no funciona
 
 // try{
