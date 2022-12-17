@@ -43,7 +43,7 @@ module.exports = app;
 */
 
 
-import fs from 'fs';
+import fs, { readFile } from 'fs';
 import fetch from 'node-fetch'
 
 const writepath = 'json/leagues/'
@@ -118,61 +118,68 @@ try{
   console.error(err)
 }
 */
+/**
+ * Method to obtain the files from the url and write them in the writepath
+ * @param {*} name name of the file to read
+ * @param {*} writepathX path to write the files
+ * @param {*} url2 url to fetch the files
+ */
+// function obtain(name, writepathX, url2){
+//   try{
+//     const data = fs.readFileSync(name+'.txt', 'utf8').split("\n")
+//     data.forEach((elem, idx) => {
+//       let url 
+//       let format
+//       if(name == 'teamIDs'){
+//         url = `${url2}/${elem%32}/${elem}.png`
+//         format = '.png'
+//       }
+//       if(name == 'nationalities'){
+//         url = `${url2}/${elem}.svg`
+//         format = '.svg'
+//       }
+//       if(name == 'leagues'){
+//         url = `${url2}/${elem}.png`
+//         format = '.png'
+//       }
 
-function obtain(name, writepathX, url2){
-  try{
-    const data = fs.readFileSync(name+'.txt', 'utf8').split("\n")
-    data.forEach((elem, idx) => {
-      let url 
-      let format
-      if(name == 'teamIDs'){
-        url = `${url2}/${elem%32}/${elem}.png`
-        format = '.png'
-      }
-      if(name == 'nationalities'){
-        url = `${url2}/${elem}.svg`
-        format = '.svg'
-      }
-      if(name == 'leagues'){
-        url = `${url2}/${elem}.png`
-        format = '.png'
-      }
+//       fetch(url).then(res => {
+//           // check status
+//           if (res.status === 200) {
+//             elem = elem.replace(/(\r\n|\n|\r)/gm, "")
+//             res.body.pipe(fs.createWriteStream(`${writepathX}${elem}${format}`, {flags:'a'}))
+//           } else {
+//             console.log(`status: ${res.status} line: ${idx} elem:${elem} not found`)
+//           }})})
+//   }catch(err){
+//     console.error(err)
+//   }
+// }
 
-      fetch(url).then(res => {
-          // check status
-  
-          if (res.status === 200) {
-            elem = elem.replace(/(\r\n|\n|\r)/gm, "")
-            res.body.pipe(fs.createWriteStream(`${writepathX}${elem}${format}`, {flags:'a'}))
-          } else {
-            console.log(`status: ${res.status} line: ${idx} elem:${elem} not found`)
-          }})})
-  }catch(err){
-    console.error(err)
-  }
-}
+//por alguna razón si se ponen los tres a la vez falla por problemas de conexión
 
-try {
-  // read leagues file into an array of lines
-  obtain('leagues', writepath, 'https://playfootball.games/media/competitions')
-} catch (err) {
-  console.error(err);
-}
+// adicional
+// try {
+//   // read leagues file into an array of lines
+//   obtain('leagues', writepath, 'https://playfootball.games/media/competitions')
+// } catch (err) {
+//   console.error(err);
+// }
 
-// Ejercicio 1.2
-try{
-  // get the flags of all countries in nationalities.txt
-  obtain('nationalities', writepath4, 'https://playfootball.games/who-are-ya/media/nations')
-}catch(err){
-  console.error(err)
-}
+// Ejercicio 1.2 - adicional
+// try{
+//   // get the flags of all countries in nationalities.txt
+//   obtain('nationalities', writepath4, 'https://playfootball.games/who-are-ya/media/nations')
+// }catch(err){
+//   console.error(err)
+// }
 
-//Ejercicio 1.4-5
-try{
-  obtain('teamIDs', writepath2, 'https://cdn.sportmonks.com/images/soccer/teams')
-}catch(err){
-  console.error(err)
-}
+//Ejercicio 1.4-5 - adicional
+// try{
+//   obtain('teamIDs', writepath2, 'https://cdn.sportmonks.com/images/soccer/teams')
+// }catch(err){
+//   console.error(err)
+// }
 
 //Ejercicio 1.6 no funciona
 
@@ -203,3 +210,43 @@ try{
 // }catch(err){
 //   console.error(err)
 // }
+
+// let i = 0
+
+
+
+// //Ejercicio 1.6
+const data = JSON.parse(fs.readFileSync('./fullplayers.json', 'utf8'))
+let i = -1
+
+let inter = setInterval(() => {
+      if (i==data.length-2){
+        clearInterval(inter)
+      }
+  try{
+    // console.log(data.length)
+    
+    if (i<data.length){
+      i=i+1
+      // console.log(data[i])
+      // console.log(`https://media.api-sports.io/football/players/${data[i].id}.png`)
+      const url = `https://media.api-sports.io/football/players/${data[i].id}.png`
+      fetch(url).then(res => {
+        // console.log(res)
+        console.log(i)
+          if (res.status === 200) {
+            res.body.pipe(fs.createWriteStream(`${writepath3}${data[i].id}.png`, {flags:'a'}))
+            
+          } else {
+            console.log(`status: ${res.status} line: ${i} elem:${data[i].id} not found`)
+          }
+        })
+    }
+  }catch(err){
+    console.error(err)
+  }
+
+}, 100);
+
+
+
