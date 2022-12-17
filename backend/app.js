@@ -52,10 +52,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 */
 
-<<<<<<< HEAD
-import fs, { readFile } from 'fs';
-import fetch from 'node-fetch'
-=======
 import fs from 'fs';
 import fetch, { isRedirect } from 'node-fetch'
 import { createRequire } from 'module';
@@ -76,7 +72,6 @@ app.set('views', './views');
 
 var router = express.Router();
 const { body, validationResult } = validator;
->>>>>>> 03d21293c2bda15ee4655a12e53bbd0a0e441892
 
 const writepath = 'json/leagues/'
 const writepath2 = 'json/teams/'
@@ -191,7 +186,6 @@ try{
   console.error(err)
 }
 */
-<<<<<<< HEAD
 /**
  * Method to obtain the files from the url and write them in the writepath
  * @param {*} name name of the file to read
@@ -229,27 +223,6 @@ try{
 //     console.error(err)
 //   }
 // }
-=======
-/*
-function obtain(name, writepathX, url2){
-  try{
-    const data = fs.readFileSync(name+'.txt', 'utf8').split("\n")
-    data.forEach((elem, idx) => {
-      let url 
-      let format
-      if(name == 'teamIDs'){
-        url = `${url2}/${elem%32}/${elem}.png`
-        format = '.png'
-      }
-      if(name == 'nationalities'){
-        url = `${url2}/${elem}.svg`
-        format = '.svg'
-      }
-      if(name == 'leagues'){
-        url = `${url2}/${elem}.png`
-        format = '.png'
-      }
->>>>>>> 03d21293c2bda15ee4655a12e53bbd0a0e441892
 
 //por alguna razón si se ponen los tres a la vez falla por problemas de conexión
 
@@ -269,7 +242,6 @@ function obtain(name, writepathX, url2){
 //   console.error(err)
 // }
 
-<<<<<<< HEAD
 //Ejercicio 1.4-5 - adicional
 // try{
 //   obtain('teamIDs', writepath2, 'https://cdn.sportmonks.com/images/soccer/teams')
@@ -277,15 +249,6 @@ function obtain(name, writepathX, url2){
 //   console.error(err)
 // }
 
-=======
-//Ejercicio 1.4-5
-try{
-  obtain('teamIDs', writepath2, 'https://cdn.sportmonks.com/images/soccer/teams')
-}catch(err){
-  console.error(err)
-}
-*/
->>>>>>> 03d21293c2bda15ee4655a12e53bbd0a0e441892
 //Ejercicio 1.6 no funciona
 
 // try{
@@ -316,7 +279,6 @@ try{
 //   console.error(err)
 // }
 
-<<<<<<< HEAD
 // let i = 0
 
 
@@ -356,6 +318,4 @@ let inter = setInterval(() => {
 
 
 
-=======
 app.listen(port, () => console.log(`Servidor lanzado en el puerto ${port}!`))
->>>>>>> 03d21293c2bda15ee4655a12e53bbd0a0e441892
