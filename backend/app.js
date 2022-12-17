@@ -42,19 +42,92 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 */
 
+/*
+const express = require('express');
+//const mongojs = require('mongojs')
+//const db = mongojs('mongodb://127.0.0.1:27017/test', ["inventory"])
+const app = express();
+//const port = 3000;
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+*/
 
+<<<<<<< HEAD
 import fs, { readFile } from 'fs';
 import fetch from 'node-fetch'
+=======
+import fs from 'fs';
+import fetch, { isRedirect } from 'node-fetch'
+import { createRequire } from 'module';
+//import { express } from 'express';
+import validator from 'express-validator';
+
+import pkg from 'express';
+const express = pkg;
+
+const app = express();
+const port = 3000;
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
+var router = express.Router();
+const { body, validationResult } = validator;
+>>>>>>> 03d21293c2bda15ee4655a12e53bbd0a0e441892
 
 const writepath = 'json/leagues/'
 const writepath2 = 'json/teams/'
 const writepath3 = 'json/players/'
 const writepath4 = 'json/flags/'
 
-fs.mkdirSync(writepath, { recursive: true })
+fs.mkdirSync(writepath,  { recursive: true })
 fs.mkdirSync(writepath2, { recursive: true })
 fs.mkdirSync(writepath3, { recursive: true })
 fs.mkdirSync(writepath4, { recursive: true })
+
+app.get('/', (req, res) => {
+  res.render('formNewPlayers')
+})
+
+app.post("/tratarFormCrear", 
+  body('name').notEmpty(),
+  body('name').isAlpha(),
+
+  body('birthdate').notEmpty(),
+  
+  body('nationality').notEmpty(),
+  body('nationality').isAlpha(),
+  
+  body('teamID').notEmpty(),
+  body('teamID').isNumeric(),
+  
+  body('position').notEmpty(),
+  body('position').isAlpha(),
+
+  body('number').notEmpty(),
+  body('number').isNumeric(),
+
+  body('leagueID').notEmpty(),
+  body('leagueID').isNumeric(),
+
+  (req, res) => {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.send("Te voy a meter en un gulag, SIN COMIDA")
+    }
+
+    let eljson = JSON.stringify(req.body);
+    console.log("Jugador nuevo añadido a la base de datos: \n" + eljson);
+
+    // aqui se añadiria el jugador a la base de datos
+
+    res.send("Se ha añadido el jugador a la base de datos: " + eljson);
+})
 
 /*
 try {
@@ -118,6 +191,7 @@ try{
   console.error(err)
 }
 */
+<<<<<<< HEAD
 /**
  * Method to obtain the files from the url and write them in the writepath
  * @param {*} name name of the file to read
@@ -155,6 +229,27 @@ try{
 //     console.error(err)
 //   }
 // }
+=======
+/*
+function obtain(name, writepathX, url2){
+  try{
+    const data = fs.readFileSync(name+'.txt', 'utf8').split("\n")
+    data.forEach((elem, idx) => {
+      let url 
+      let format
+      if(name == 'teamIDs'){
+        url = `${url2}/${elem%32}/${elem}.png`
+        format = '.png'
+      }
+      if(name == 'nationalities'){
+        url = `${url2}/${elem}.svg`
+        format = '.svg'
+      }
+      if(name == 'leagues'){
+        url = `${url2}/${elem}.png`
+        format = '.png'
+      }
+>>>>>>> 03d21293c2bda15ee4655a12e53bbd0a0e441892
 
 //por alguna razón si se ponen los tres a la vez falla por problemas de conexión
 
@@ -174,6 +269,7 @@ try{
 //   console.error(err)
 // }
 
+<<<<<<< HEAD
 //Ejercicio 1.4-5 - adicional
 // try{
 //   obtain('teamIDs', writepath2, 'https://cdn.sportmonks.com/images/soccer/teams')
@@ -181,6 +277,15 @@ try{
 //   console.error(err)
 // }
 
+=======
+//Ejercicio 1.4-5
+try{
+  obtain('teamIDs', writepath2, 'https://cdn.sportmonks.com/images/soccer/teams')
+}catch(err){
+  console.error(err)
+}
+*/
+>>>>>>> 03d21293c2bda15ee4655a12e53bbd0a0e441892
 //Ejercicio 1.6 no funciona
 
 // try{
@@ -211,6 +316,7 @@ try{
 //   console.error(err)
 // }
 
+<<<<<<< HEAD
 // let i = 0
 
 
@@ -250,3 +356,6 @@ let inter = setInterval(() => {
 
 
 
+=======
+app.listen(port, () => console.log(`Servidor lanzado en el puerto ${port}!`))
+>>>>>>> 03d21293c2bda15ee4655a12e53bbd0a0e441892
