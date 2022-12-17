@@ -1,11 +1,11 @@
 Apartado 1.1.1
    Ejercicio 1: Crea directorios de forma síncrona. El parámetro sirve para hacerlo de forma recursiva.
    Ejercicio 2: Sirve para crear una secuencia de escritura, y con la opción por defecto flags:w, abre un archivo para escribir.
-   Ejercicio 3: - 302 moved temprarily 
-                - 401 unauthorized response
-                - 429 too many requests
-                - 500 internal server error
-   Ejercicio 4: !!!
+   Ejercicio 3: - 302 moved temprarily (el recurso que se solicita ha sido movido temporalmente a la URL dada por el encabezado de ubicación).
+                - 401 unauthorized access (se le ha denegado el acceso a la página).
+                - 429 too many requests (el usuario ha enviado demasiadas peticiones en un limite de tiempo).
+                - 500 internal server error (hay un problema general con el servidor de la página web).
+   Ejercicio 4: Su propósito es unir una secuencia de escritura a una de lectura para pasar los datos de la secuencia de lectura a la  de escritura.
 
 Apartado 1.3
    Ejercicio 2: !!!

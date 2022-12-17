@@ -72,7 +72,7 @@ try {
 } catch (err) {
   console.error(err);
 }
-
+/*
 // Ejercicio 1.2
 try{
   // get the flags of all countries in nationalities.txt
@@ -92,7 +92,7 @@ try{
         }})})
 }catch(err){
   console.error(err)
-}
+}*/
 /*
 //Ejercicio 1.4
 try{
