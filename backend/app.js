@@ -94,7 +94,7 @@ try{
   console.error(err)
 }*/
 /*
-//Ejercicio 1.4
+//Ejercicio 1.4-5
 try{
   const data = fs.readFileSync('teamIDs.txt', 'utf8').split("\n")
   data.forEach((elem, idx) => {
@@ -115,17 +115,17 @@ try{
 }
 let i = 0
 */
-//Ejercicio 1.5 no funciona
-/*
-try{
-  fetch('Users/Roberto/OneDrive%20-%20UPV%20EHU/Documents/GitHub/SW/SW-Proyecto-2/frontend/json/fullplayers.json').then(res=>res.json()).then(res => {
-    console.log(res)})
+//Ejercicio 1.6 no funciona
+
+// try{
+  // fetch('./fullplayers.json').then(res=>res.json()).then(res => {
+  //   console.log(res)})
 //   const data = fs.readFileSync('../frontend/json/fullplayers.json', 'utf8')
 //   console.log(data.length)
 //   console.log(data[5])
 //   data.forEach((elem, idx) => {
 //     console.log(elem)
-//     elem = JSON.parse(elem).id
+//     elem = JSON.parse(elem)
 //     console.log(`https://media.api-sports.io/football/players/${elem}.png`)
 //     const url = `https://media.api-sports.io/football/players/${elem}.png`
 //     fetch(url).then(res => {
@@ -141,7 +141,6 @@ try{
 //         } else {
 //           console.log(`status: ${res.status} line: ${idx} elem:${elem} not found`)
 //         }})})
-}catch(err){
-  console.error(err)
-}
-*/
+// }catch(err){
+//   console.error(err)
+// }
