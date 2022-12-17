@@ -42,19 +42,87 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 */
 
+/*
+const express = require('express');
+//const mongojs = require('mongojs')
+//const db = mongojs('mongodb://127.0.0.1:27017/test', ["inventory"])
+const app = express();
+//const port = 3000;
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+*/
 
 import fs from 'fs';
-import fetch from 'node-fetch'
+import fetch, { isRedirect } from 'node-fetch'
+import { createRequire } from 'module';
+//import { express } from 'express';
+import validator from 'express-validator';
+
+import pkg from 'express';
+const express = pkg;
+
+const app = express();
+const port = 3000;
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
+var router = express.Router();
+const { body, validationResult } = validator;
 
 const writepath = 'json/leagues/'
 const writepath2 = 'json/teams/'
 const writepath3 = 'json/players/'
 const writepath4 = 'json/flags/'
 
-fs.mkdirSync(writepath, { recursive: true })
+fs.mkdirSync(writepath,  { recursive: true })
 fs.mkdirSync(writepath2, { recursive: true })
 fs.mkdirSync(writepath3, { recursive: true })
 fs.mkdirSync(writepath4, { recursive: true })
+
+app.get('/', (req, res) => {
+  res.render('formNewPlayers')
+})
+
+app.post("/tratarFormCrear", 
+  body('name').notEmpty(),
+  body('name').isAlpha(),
+
+  body('birthdate').notEmpty(),
+  
+  body('nationality').notEmpty(),
+  body('nationality').isAlpha(),
+  
+  body('teamID').notEmpty(),
+  body('teamID').isNumeric(),
+  
+  body('position').notEmpty(),
+  body('position').isAlpha(),
+
+  body('number').notEmpty(),
+  body('number').isNumeric(),
+
+  body('leagueID').notEmpty(),
+  body('leagueID').isNumeric(),
+
+  (req, res) => {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.send("Te voy a meter en un gulag, SIN COMIDA")
+    }
+
+    let eljson = JSON.stringify(req.body);
+    console.log("Jugador nuevo añadido a la base de datos: \n" + eljson);
+
+    // aqui se añadiria el jugador a la base de datos
+
+    res.send("Se ha añadido el jugador a la base de datos: " + eljson);
+})
 
 /*
 try {
@@ -118,7 +186,7 @@ try{
   console.error(err)
 }
 */
-
+/*
 function obtain(name, writepathX, url2){
   try{
     const data = fs.readFileSync(name+'.txt', 'utf8').split("\n")
@@ -173,7 +241,7 @@ try{
 }catch(err){
   console.error(err)
 }
-
+*/
 //Ejercicio 1.6 no funciona
 
 // try{
@@ -203,3 +271,5 @@ try{
 // }catch(err){
 //   console.error(err)
 // }
+
+app.listen(port, () => console.log(`Servidor lanzado en el puerto ${port}!`))
