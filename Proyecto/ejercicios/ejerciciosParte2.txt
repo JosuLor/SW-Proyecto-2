@@ -1,0 +1,9 @@
+Apartado 1.1.1
+   Ejercicio 1: Crea directorios de forma síncrona. El parámetro sirve para hacerlo de forma recursiva.
+   Ejercicio 2: Sirve para crear una secuencia de escritura, y con la opción por defecto flags:w, abre un archivo para escribir.
+   Ejercicio 3: - 302 moved temprarily 
+                - 401 unauthorized response
+                - 429 too many requests
+                - 500 internal server error
+   Ejercicio 4: !!!!!!!!!!!!!!
+   
