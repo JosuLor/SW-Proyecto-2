@@ -49,6 +49,7 @@ import fetch from 'node-fetch'
 const writepath = 'json/leagues/'
 const writepath2 = 'json/teams/'
 const writepath3 = 'json/players/'
+const writepath4 = 'json/flags/'
 
 fs.mkdirSync(writepath, { recursive: true })
 
@@ -72,6 +73,27 @@ try {
   console.error(err);
 }
 
+// Ejercicio 1.2
+try{
+  // get the flags of all countries in nationalities.txt
+  const data = fs.readFileSync('nationalities.txt', 'utf8').split("\n")
+  data.forEach((elem, idx) => {
+    console.log(`https://playfootball.games/who-are-ya/media/nations/${elem}.svg`)
+    const url = `https://playfootball.games/who-are-ya/media/nations/${elem}.svg`
+    fetch(url).then(res => {
+        // check status
+
+        if (res.status === 200) {
+          elem = elem.replace(/(\r\n|\n|\r)/gm, "")
+          
+          res.body.pipe(fs.createWriteStream(`${writepath4}${elem}.svg`, {flags:'a'}))
+        } else {
+          console.log(`status: ${res.status} line: ${idx} elem:${elem} not found`)
+        }})})
+}catch(err){
+  console.error(err)
+}
+/*
 //Ejercicio 1.4
 try{
   const data = fs.readFileSync('teamIDs.txt', 'utf8').split("\n")
@@ -92,7 +114,9 @@ try{
   console.error(err)
 }
 let i = 0
+*/
 //Ejercicio 1.5 no funciona
+/*
 try{
   fetch('Users/Roberto/OneDrive%20-%20UPV%20EHU/Documents/GitHub/SW/SW-Proyecto-2/frontend/json/fullplayers.json').then(res=>res.json()).then(res => {
     console.log(res)})
@@ -120,3 +144,4 @@ try{
 }catch(err){
   console.error(err)
 }
+*/
