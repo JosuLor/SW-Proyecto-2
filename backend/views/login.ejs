@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title> Register </title>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h1> Login to an account </h1>
+        <form action="login" method="post">
+            Email: <input type="text" name="email" value="<%= data.email %>"><br /><br />
+            Contraseña: <input type="password" name="pass"><br /><br />
+            <input type="submit" value="Log in">
+        </form>
+        <b><p style="color: red; font-style: italic"> <%= data.elerror %> </p></b>
+        <h4> No tienes una cuenta aún? Créala <a href="crearUsuario">aqui</a> </h4>
+    </div>
+</body>
+</html>

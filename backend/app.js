@@ -55,14 +55,19 @@ app.use(express.urlencoded({extended: true}));
 import fs from 'fs';
 import fetch, { isRedirect } from 'node-fetch'
 import { createRequire } from 'module';
-//import { express } from 'express';
 import validator from 'express-validator';
-
+import sesion from 'express-session';
 import pkg from 'express';
-const express = pkg;
 
+const express = pkg;
 const app = express();
 const port = 3000;
+
+app.use(sesion({
+  secret: "1234",
+  resave: true,
+  saveUninitialized: true,
+}))
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -84,10 +89,126 @@ fs.mkdirSync(writepath3, { recursive: true })
 fs.mkdirSync(writepath4, { recursive: true })
 
 app.get('/', (req, res) => {
-  res.render('formNewPlayers')
+  
+  if (!req.session.inicializada) {
+    res.render('login', {data: { elerror: "" }})
+  } else {
+    if (req.session.admin) {
+      res.render('menuAdmin', {data: { email: req.session.usuario }});
+    } else {
+      res.render('game', {data: { email: req.session.usuario }}); // aqui iria la pagina de usuario normal (el juego en si)
+    }
+  }  
 })
 
-app.post("/tratarFormCrear", 
+app.get('/login', (req, res) => {
+
+  if (req.session.inicializada) {
+    res.redirect('game', {data: { email: req.session.usuario }});
+  } else {
+    res.render('login', {data: { elerror: "" }})
+
+  }
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+
+  res.redirect('login')
+});
+
+app.get('/game', (req, res) => {
+  if (req.session.inicializada) {
+    res.render('game', {data: { email: req.session.usuario }})
+  } else {
+    res.redirect('login')
+  }
+
+});
+
+app.get('/tratarFormCrear', (req, res) => { // crear jugadores nuevos
+  
+  if (req.session.admin) {
+    res.render('formNewPlayers', {data: { elerror: "" }})
+  } else {
+    res.redirect('login')
+  }
+});
+
+app.get('/crearUsuario', (req, res) => {  // crear cuentas de usuarios nuevas
+  res.render('register', {data: { elerror: "" }})
+})
+
+
+// Ejercicio 6.1 - Registrar usuario
+app.post("/crearUsuario",
+  body('name').notEmpty(),
+  body('name').isAlpha(),
+
+  body('surname').notEmpty(),
+  body('surname').isAlpha(),
+
+  body('email').isEmail(),
+  
+  (req, res) => {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.render('register', {data: { elerror: "Validation Error. Por favor, introduzca correctamente los datos", nombre: req.body.name, apellido: req.body.surname, email: req.body.email }})
+    } else {
+
+      
+      let eljson = JSON.stringify(req.body);
+      console.log("Usuario nuevo añadido a la base de datos: \n" + eljson);
+      
+      // aqui se añadiria el usuario a la base de datos
+      
+      res.redirect('login')
+      
+    }
+  });
+  
+  // Ejercicio 6.1 - Login
+app.post("/login",
+  body('email').notEmpty(),
+  body('email').isEmail(),
+
+  body('pass').notEmpty(),
+
+  (req, res) => {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.render('login', {data: { elerror: "Validation Error. Por favor, introduzca correctamente los datos", email: req.body.email }})
+    }
+
+    let eljson = JSON.stringify(req.body);
+    
+    // aqui se miraria si el usuario esta en la base de datos, y si la contraseña - email son correctos
+  /*
+    if (tupla email-contraseña incorrecta) {
+      res.render('login', {data: { elerror: "Email o contraseña incorrectos", email: req.body.email }})
+    }
+  */
+
+    req.session.usuario = req.body.email;
+    req.session.inicializada = true;
+    req.session.admin = true;
+    //req.session.admin = mirar en la base de datos
+    console.log("Usuario loggeado: \n" + eljson);
+    
+    if (req.session.admin) {
+      res.render('menuAdmin', {data: { email: req.session.usuario }});
+    } else {
+      res.redirect('game');
+    }
+});
+
+
+// Ejercicio 2.4
+app.post("/tratarFormCrear",  // crear jugadores nuevos
   body('name').notEmpty(),
   body('name').isAlpha(),
 
@@ -113,7 +234,7 @@ app.post("/tratarFormCrear",
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      res.send("Te voy a meter en un gulag, SIN COMIDA")
+      res.render("formNewPlayers", {data: { elerror: "Validation Error. Por favor, introduzca correctamente los datos", nombre: req.body.name, fecha: req.body.birthdate, nacionalidad: req.body.nationality, equipo: req.body.teamID, posicion: req.body.position, dorsal: req.body.number, liga: req.body.leagueID }})
     }
 
     let eljson = JSON.stringify(req.body);
@@ -121,7 +242,7 @@ app.post("/tratarFormCrear",
 
     // aqui se añadiria el jugador a la base de datos
 
-    res.send("Se ha añadido el jugador a la base de datos: " + eljson);
+    res.render('menuAdmin', {data: { email: req.session.usuario }})
 })
 
 /*
@@ -282,7 +403,7 @@ try{
 // let i = 0
 
 
-
+/*
 // //Ejercicio 1.6
 const data = JSON.parse(fs.readFileSync('./fullplayers.json', 'utf8'))
 let i = -1
@@ -315,7 +436,7 @@ let inter = setInterval(() => {
   }
 
 }, 100);
-
+*/
 
 
 app.listen(port, () => console.log(`Servidor lanzado en el puerto ${port}!`))
