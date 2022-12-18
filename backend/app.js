@@ -370,73 +370,37 @@ try{
 //   console.error(err)
 // }
 
-//Ejercicio 1.6 no funciona
-
-// try{
-  // fetch('./fullplayers.json').then(res=>res.json()).then(res => {
-  //   console.log(res)})
-//   const data = fs.readFileSync('../frontend/json/fullplayers.json', 'utf8')
-//   console.log(data.length)
-//   console.log(data[5])
-//   data.forEach((elem, idx) => {
-//     console.log(elem)
-//     elem = JSON.parse(elem)
-//     console.log(`https://media.api-sports.io/football/players/${elem}.png`)
-//     const url = `https://media.api-sports.io/football/players/${elem}.png`
-//     fetch(url).then(res => {
-//         // check status
-//         i++
-//         if (i==100){
-//           i=0
-//           sleep(100)
-//         }
-//         if (res.status === 200) {
-//           elem = elem.replace(/(\r\n|\n|\r)/gm, "")
-//           res.body.pipe(fs.createWriteStream(`${writepath3}${elem}.png`, {flags:'a'}))
-//         } else {
-//           console.log(`status: ${res.status} line: ${idx} elem:${elem} not found`)
-//         }})})
-// }catch(err){
-//   console.error(err)
-// }
-
-// let i = 0
 
 
-/*
-// //Ejercicio 1.6
-const data = JSON.parse(fs.readFileSync('./fullplayers.json', 'utf8'))
-let i = -1
+//Ejercicio 1.6 (url modificado de acuerdo con la aclaracion PRÁCTICA II - Nota importante)
+// const data = JSON.parse(fs.readFileSync('./public/json/fullplayers.json', 'utf8'))
+// let i = -1
 
-let inter = setInterval(() => {
-      if (i==data.length-2){
-        clearInterval(inter)
-      }
-  try{
-    // console.log(data.length)
-    
-    if (i<data.length){
-      i=i+1
-      // console.log(data[i])
-      // console.log(`https://media.api-sports.io/football/players/${data[i].id}.png`)
-      const url = `https://media.api-sports.io/football/players/${data[i].id}.png`
-      fetch(url).then(res => {
-        // console.log(res)
-        console.log(i)
-          if (res.status === 200) {
-            res.body.pipe(fs.createWriteStream(`${writepath3}${data[i].id}.png`, {flags:'a'}))
+// let inter = setInterval(() => {
+//       if (i==data.length-2){
+//         clearInterval(inter)
+//       }
+//   try{
+//     if (i<data.length){
+//       i=i+1
+//       const url = `https://playfootball.games/media/players/${data[i].id%32}/${data[i].id}.png`
+//       fetch(url).then(res => {
+//         // console.log(res)
+//         console.log(i)
+//           if (res.status === 200) {
+//             res.body.pipe(fs.createWriteStream(`${writepath3}${data[i].id}.png`, {flags:'a'}))
             
-          } else {
-            console.log(`status: ${res.status} line: ${i} elem:${data[i].id} not found`)
-          }
-        })
-    }
-  }catch(err){
-    console.error(err)
-  }
+//           } else {
+//             console.log(`status: ${res.status} line: ${i} elem:${data[i].id} not found`)
+//           }
+//         })
+//     }
+//   }catch(err){
+//     console.error(err)
+//   }
 
-}, 100);
-*/
+// }, 100);
+
 
 
 app.listen(port, () => console.log(`Servidor lanzado en el puerto ${port}!`))
