@@ -364,7 +364,7 @@ try{
 //       if(name == 'nationalities'){
 //         url = `${url2}/${elem}.svg`
 //         format = '.svg'
-//       }
+//       }    
 //       if(name == 'leagues'){
 //         url = `${url2}/${elem}.png`
 //         format = '.png'
