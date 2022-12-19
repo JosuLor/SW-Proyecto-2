@@ -439,6 +439,48 @@ try{
 
 // }, 100);
 
+var myHeaders = new Headers();
+myHeaders.append("x-rapidapi-key", "015965833e9c4332188f0185f32e117f");
+myHeaders.append("x-rapidapi-host", "v3.football.api-sports.io");
 
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+//Ejercicio 4
+function ask(data,liga){
+  let i = -1
+  let inter = setInterval(() => {
+    if (i==data.length-2){
+      clearInterval(inter)
+    }
+    i=i+1
+    fetch(`https://v3.football.api-sports.io/teams?id=${data[i].newId}`,requestOptions)
+  .then(res => res.text()).then(res => {
+    console.log(res)
+    res = JSON.parse(res).response[0]
+    console.log(res)
+    res.team.id = data[i].teamId
+    let fil = JSON.parse(fs.readFileSync(`./json/info/${liga}.txt`, 'utf8'))
+    fil.push(res)
+    fs.writeFileSync(`./json/info/${liga}.txt`, JSON.stringify(fil))
+    console.log(fil)
+  })
+  .catch(error => console.log('error', error));
+}, 6500);}
+
+const data1 = JSON.parse(fs.readFileSync('./json/newid/fullBundesliga.json', 'utf8'))
+const data2 = JSON.parse(fs.readFileSync('./json/newid/fullLaliga.json', 'utf8'))
+const data3 = JSON.parse(fs.readFileSync('./json/newid/fullLigue1.json', 'utf8'))
+const data4 = JSON.parse(fs.readFileSync('./json/newid/fullPremiere.json', 'utf8'))
+const data5 = JSON.parse(fs.readFileSync('./json/newid/fullSerieA.json', 'utf8'))
+
+//ask(data1,'fullBundesliga')
+//ask(data2,'fullLaliga')
+// ask(data3,'fullLigue1')
+// ask(data4,'fullPremiere')
+//ask(data5,'fullSerieA')
 
 app.listen(port, () => console.log(`Servidor lanzado en el puerto ${port}!`))
