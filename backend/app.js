@@ -483,4 +483,9 @@ const data5 = JSON.parse(fs.readFileSync('./json/newid/fullSerieA.json', 'utf8')
 // ask(data4,'fullPremiere')
 //ask(data5,'fullSerieA')
 
-app.listen(port, () => console.log(`Servidor lanzado en el puerto ${port}!`))
+//para josu lo del fullplayers
+// const data = JSON.parse(fs.readFileSync('./fullplayers.json', 'utf8'))
+// data.forEach((elem, idx) => {
+//   fs.appendFileSync('./josu.txt', JSON.stringify(elem) + '\n')
+// })
+// app.listen(port, () => console.log(`Servidor lanzado en el puerto ${port}!`))
