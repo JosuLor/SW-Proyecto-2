@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/JosuLor/SW-Proyecto-2/issues"
   },
-  "homepage": "https://github.com/JosuLor/SW-Proyecto-2#readme"
+  "homepage": "https://github.com/JosuLor/SW-Proyecto-2#readme",
+  "dependencies": {
+    "mongojs": "^3.1.0"
+  }
 }
