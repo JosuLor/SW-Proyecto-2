@@ -23,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -58,10 +59,13 @@ import { createRequire } from 'module';
 import validator from 'express-validator';
 import sesion from 'express-session';
 import pkg from 'express';
+import mongojs from 'mongojs'
+//npm install mongojs
 
 const express = pkg;
 const app = express();
 const port = 3000;
+const db = mongojs('mongodb://127.0.0.1:27017/testProyecto', ["usuarios"])
 
 app.use(sesion({
   secret: "1234",
@@ -88,6 +92,17 @@ fs.mkdirSync(writepath2, { recursive: true })
 fs.mkdirSync(writepath3, { recursive: true })
 fs.mkdirSync(writepath4, { recursive: true })
 
+/*
+console.log("Usuarios registrados en el sistema:")
+db.usuarios.find({}, (err, docs) => {
+  if (err) {
+    console.log(err)
+  } else {
+    console.log(docs)
+  }
+})
+*/
+
 app.get('/', (req, res) => {
   
   if (!req.session.inicializada) {
@@ -102,7 +117,15 @@ app.get('/', (req, res) => {
 })
 
 app.get('/login', (req, res) => {
-
+/*
+  db.usuarios.find({}, (err, docs) => {
+    if (err) {
+      console.log(err)
+    } else {
+      console.log(docs)
+    }
+  })
+*/
   if (req.session.inicializada) {
     res.redirect('game', {data: { email: req.session.usuario }});
   } else {
@@ -148,7 +171,10 @@ app.post("/crearUsuario",
   body('surname').notEmpty(),
   body('surname').isAlpha(),
 
+  body('email').notEmpty(),
   body('email').isEmail(),
+  
+  body('password').notEmpty(),
   
   (req, res) => {
 
@@ -160,9 +186,16 @@ app.post("/crearUsuario",
 
       
       let eljson = JSON.stringify(req.body);
-      console.log("Usuario nuevo añadido a la base de datos: \n" + eljson);
       
-      // aqui se añadiria el usuario a la base de datos
+      // aqui se añadiria el usuario a la base de datos (si no existe ya)
+      db.usuarios.insert({ name: req.body.name, surname: req.body.surname, email: req.body.email, password: req.body.password, admin: false }, (err, docs) => {
+        if (err) {
+          console.log(err)
+        } else {
+          //console.log(docs)
+        }
+      })
+      console.log("Usuario nuevo añadido a la base de datos: \n" + eljson);
       
       res.redirect('login')
       
@@ -184,33 +217,31 @@ app.post("/login",
       res.render('login', {data: { elerror: "Validation Error. Por favor, introduzca correctamente los datos", email: req.body.email }})
     }
 
-    let eljson = JSON.stringify(req.body);
-    
-    // aqui se miraria si el usuario esta en la base de datos, y si la contraseña - email son correctos
-  /*
-    if (tupla email-contraseña incorrecta) {
-      res.render('login', {data: { elerror: "Email o contraseña incorrectos", email: req.body.email }})
-    }
-  */
+    let resultado = db.usuarios.findOne({ "email": req.body.email, "password": req.body.pass }, (err, docs) => {
+      if (docs == null) {
+        res.render('login', {data: { elerror: "Email / Contraseña incorrectos", email: req.body.email }})
+      } else {
 
-    req.session.usuario = req.body.email;
-    req.session.inicializada = true;
-    req.session.admin = true;
-    //req.session.admin = mirar en la base de datos
-    console.log("Usuario loggeado: \n" + eljson);
-    
-    if (req.session.admin) {
-      res.render('menuAdmin', {data: { email: req.session.usuario }});
-    } else {
-      res.redirect('game');
-    }
+        console.log("Usuario loggeado: " + req.body.email);
+
+        req.session.usuario = docs.name + " " + docs.surname;
+        req.session.inicializada = true;
+        req.session.admin = docs.admin;
+
+        if (req.session.admin) {
+          res.render('menuAdmin', {data: { email: req.session.usuario }});
+        } else {
+          res.redirect('game');
+        }
+      }
+    });
 });
 
 
 // Ejercicio 2.4
 app.post("/tratarFormCrear",  // crear jugadores nuevos
   body('name').notEmpty(),
-  body('name').isAlpha(),
+//  body('name').isAlpha(),
 
   body('birthdate').notEmpty(),
   
@@ -235,14 +266,21 @@ app.post("/tratarFormCrear",  // crear jugadores nuevos
 
     if (!errors.isEmpty()) {
       res.render("formNewPlayers", {data: { elerror: "Validation Error. Por favor, introduzca correctamente los datos", nombre: req.body.name, fecha: req.body.birthdate, nacionalidad: req.body.nationality, equipo: req.body.teamID, posicion: req.body.position, dorsal: req.body.number, liga: req.body.leagueID }})
-    }
-
-    let eljson = JSON.stringify(req.body);
-    console.log("Jugador nuevo añadido a la base de datos: \n" + eljson);
-
-    // aqui se añadiria el jugador a la base de datos
-
-    res.render('menuAdmin', {data: { email: req.session.usuario }})
+    } else {
+      
+      db.players.insert({ name: req.body.name, birthdate: req.body.birthdate, nationality: req.body.nationality, teamID: req.body.teamID, position: req.body.position, number: req.body.number, leagueID: req.body.leagueID }, (err, docs) => {
+        if (err) {
+          console.log(err)
+        } else {
+          //console.log(docs)
+        }
+      })
+      
+      let eljson = JSON.stringify(req.body);
+      console.log("Jugador nuevo añadido a la base de datos: \n" + eljson);
+      
+      res.render('menuAdmin', {data: { email: req.session.usuario }})
+  }
 })
 
 /*
