@@ -266,7 +266,7 @@ let setupRows = function (game) {
      */
     let getPlayer = async function (playerId) {
         //FALTA COMPROBAR
-        let jugadores = await fetchJSON("../json/fullplayers.json").then((data) => {
+        let jugadores = await fetchJSON("fullplayers.json").then((data) => {
             // console.log(data);
             return data;
         })
