@@ -1,4 +1,5 @@
 {
     "vscode-pets.petColor": "black",
-    "vscode-pets.petSize": "medium"
+    "vscode-pets.petSize": "medium",
+    "liveServer.settings.port": 3001
 }
