@@ -32,7 +32,8 @@ router.get('/', (req, res) => {
     if (req.session.admin) {
       res.render('menuAdmin', {data: { email: req.session.usuario }});
     } else {
-      res.redirect('https://sw.jlorenzo015.eus/');
+      res.redirect('http://localhost:3000/');
+      //res.redirect('https://sw.jlorenzo015.eus/');
       //app.restart();
       //res.render('game', {data: { email: req.session.usuario }}); // aqui iria la pagina de usuario normal (el juego en si)
     }
@@ -41,7 +42,8 @@ router.get('/', (req, res) => {
 
 router.get('/login', (req, res) => {
   if (req.session.inicializada) {
-    res.redirect('https://sw.jlorenzo015.eus/');
+    res.redirect('http://localhost:3000/');
+    //res.redirect('https://sw.jlorenzo015.eus/');
     //res.redirect('game', {data: { email: req.session.usuario }});
   } else {
     res.render('login', {data: { elerror: "" }})
@@ -60,7 +62,8 @@ router.get('/logout', (req, res) => {
 
 router.get('/game', (req, res) => {
   if (req.session.inicializada) {
-    res.redirect('https://sw.jlorenzo015.eus/');
+    res.redirect('http://localhost:3000/');
+    //res.redirect('https://sw.jlorenzo015.eus/');
     //res.render('game', {data: { email: req.session.usuario }})
   } else {
     res.redirect('login')
@@ -138,7 +141,8 @@ router.post("/login",
         if (req.session.admin) {
           res.render('menuAdmin', {data: { email: req.session.usuario }});
         } else {
-          res.redirect('https://sw.jlorenzo015.eus/');
+          res.redirect('http://localhost:3000/');
+          //res.redirect('https://sw.jlorenzo015.eus/');
         }
       }
     });
