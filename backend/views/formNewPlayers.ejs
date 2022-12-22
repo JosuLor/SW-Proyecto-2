@@ -8,7 +8,8 @@
 <body>
     <div style="text-align: center;">
         <h1>Insert new player into the data base</h1><br /><br />
-        <form action="/tratarFormCrear" method="post">
+        <form action="/api/players/<%= data.accion %>" method="<%= data.metodo %>">
+            Player ID: <input type="text" name="playerid" value="<%= data.playerid %>"><br /><br />
             First Name: <input type="text" name="name" value="<%= data.nombre %>"><br /><br />
             Birthdate: <input type="text" name="birthdate" value="<%= data.fecha %>"><br /><br />
             Nationality: <input type="text" name="nationality" value="<%= data.nacionalidad %>"><br /><br />
@@ -16,6 +17,7 @@
             Position: <input type="text" name="position" value="<%= data.posicion %>"><br /><br />
             Number: <input type="text" name="number" value="<%= data.dorsal %>"><br /><br />
             LeagueId: <input type="text" name="leagueID" value="<%= data.liga %>"><br /><br />
+            <input hidden type="text" name="mongoid" value="<%=data.mongoid%>">
             <input type="submit" value="Submit">
         </form>
         <b><p style="color: red; font-style: italic"> <%= data.elerror %> </p></b>

@@ -83,5 +83,3 @@ Promise.all([fetchJSON("fullplayers.json"), fetchJSON("solution.json")]).then(
 
   }
 );
-
-
